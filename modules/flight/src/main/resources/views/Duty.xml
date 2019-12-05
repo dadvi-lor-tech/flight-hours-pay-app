@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
+
+   <grid name="duty-grid" title="Duties" model="com.axelor.apps.flight.db.Duty">
+      <field name="name" />
+      <field name="departureAirport" />
+      <field name="arrivalAirport" />
+      <field name="isRoundTrip" />
+      <field name="currentDuration" widget="duration" />
+   </grid>
+
+   <form name="duty-form" title="Duty" model="com.axelor.apps.flight.db.Duty">
+      <panel>
+         <field name="name" />
+         <field name="isLeave" />
+      </panel>
+      <panel showIf="isLeave">
+         <field name="startDate" />
+         <field name="endDate" />
+         <field name="dailyRate" />
+      </panel>
+      <panel hideIf="isLeave">
+         <field name="isRoundTrip" />
+         <field name="departureAirport" />
+         <field name="arrivalAirport" />
+         <field name="currentInboundDuration" widget="duration" />
+         <field name="currentOutboundDuration" widget="duration" />
+         <field name="scheduledTime" colSpan="12" grid-view="scheduled-time-grid" form-view="scheduled-time-form" />
+      </panel>
+   </form>
+
+</object-views>

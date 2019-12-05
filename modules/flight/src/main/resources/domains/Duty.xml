@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<domain-models xmlns='http://axelor.com/xml/ns/domain-models' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xsi:schemaLocation='http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.2.xsd'>
+
+   <module name="flight" package="com.axelor.apps.flight.db" />
+
+   <entity name="Duty" jsonAttrs="false">
+
+      <string name="name" title="Name" namecolumn="true" />
+
+      <many-to-one name="departureAirport" title="Departure" ref="com.axelor.apps.flight.db.Airport" />
+      <many-to-one name="arrivalAirport" title="Arrival" ref="com.axelor.apps.flight.db.Airport" />
+      <boolean name="isRoundTrip" title="Round-trip ?" />
+
+      <one-to-many name="scheduledTime" title="Scheduled time" ref="com.axelor.apps.flight.db.ScheduledTime" mappedBy="duty" />
+      <integer name="currentInboundDuration" title="Current inbound duration" />
+      <integer name="currentOutboundDuration" title="Current outbound duration" />
+
+      <boolean name="isLeave" title="Leave ?" />
+      <decimal name="dailyRate" title="Daily rate" />
+      <date name="startDate" title="Start date" />
+      <date name="endDate" title="End date" />
+
+   </entity>
+
+</domain-models>

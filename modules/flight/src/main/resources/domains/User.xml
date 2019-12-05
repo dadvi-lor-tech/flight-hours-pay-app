@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<domain-models xmlns='http://axelor.com/xml/ns/domain-models' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xsi:schemaLocation='http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.2.xsd'>
+
+   <module name="auth" package="com.axelor.auth.db" />
+
+   <entity name="User" cacheable="true">
+
+      <many-to-one name="homebase" title="Homebase" ref="com.axelor.apps.flight.db.Airport" />
+
+      <one-to-many name="sbhList" title="SBH" ref="com.axelor.apps.flight.db.Sbh" mappedBy="user" />
+
+   </entity>
+
+</domain-models>

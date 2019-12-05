@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
+
+<menuitem title="" name=""/>
+<action-view name="" title="Hours dashboard">
+<view type="dashboard" name="hours.dashboard"/>
+</action-view>
+
+   <!-- Actual duty -->
+   <menuitem name="actual-duty-menu" title="Actual duties" action="actual.duty.all" icon="fa-plane" icon-background="blue" />
+   <action-view name="actual.duty.all" title="Actual duties" model="com.axelor.apps.flight.db.ActualDuty">
+      <view type="grid" name="actual-duty-grid" />
+      <view type="form" name="actual-duty-form" />
+   </action-view>
+
+   <!-- Pay month -->
+   <menuitem name="pay-month-menu" title="Pay months" action="pay.month.all" icon="fa-money" icon-background="yellow" />
+   <action-view name="pay.month.all" title="Pay months" model="com.axelor.apps.flight.db.PayMonth">
+      <view type="grid" name="pay-month-grid" />
+      <view type="form" name="pay-month-form" />
+   </action-view>
+
+   <!-- Config -->
+   <menuitem name="config-menu" title="Configuration" icon="fa-cogs" icon-background="teal" />
+
+   <menuitem name="airport-menu" title="Airports" parent="config-menu" action="airport.all" />
+   <action-view name="airport.all" title="Airports" model="com.axelor.apps.flight.db.Airport">
+      <view type="grid" name="airport-grid" />
+      <view type="form" name="airport-form" />
+   </action-view>
+
+   <menuitem name="duty-menu" title="Duties" parent="config-menu" action="duty.all" />
+   <action-view name="duty.all" title="Duties" model="com.axelor.apps.flight.db.Duty">
+      <view type="grid" name="duty-grid" />
+      <view type="form" name="duty-form" />
+   </action-view>
+
+</object-views>

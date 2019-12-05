@@ -1,0 +1,7 @@
+apply plugin: 'com.axelor.app-module' 
+
+axelor { 
+  title = "Flight"
+  description = "A module to log flight hours, monitor limitations and compute salary."
+  removable = false
+}

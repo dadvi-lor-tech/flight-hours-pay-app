@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
+
+   <grid name="actual-duty-grid" title="Actual duties" model="com.axelor.apps.flight.db.ActualDuty">
+      <field name="departureDate" />
+      <field name="duty" />
+      <field name="actualDuration" widget="duration" />
+      <field name="durationDifference" widget="duration" />
+      <field name="isWoff" />
+      <field name="isOob" />
+   </grid>
+
+   <form name="actual-duty-form" title="Actual duty" model="com.axelor.apps.flight.db.ActualDuty">
+      <panel>
+         <field name="departureDate" />
+         <field name="duty" grid-view="duty-grid" form-view="duty-form" />
+         <field name="actualInboundDuration" widget="duration" onChange="action-actual-duty-record-set-diff" />
+         <field name="actualOutboundDuration" widget="duration" onChange="action-actual-duty-record-set-diff" />
+         <field name="duty.currentInboundDuration" />
+         <field name="duty.currentOutboundDuration" />
+         <field name="durationDifference" widget="duration" readonly="true" />
+         <field name="isWoff" />
+         <field name="isOob" />
+      </panel>
+   </form>
+
+   <action-record name="action-actual-duty-record-set-diff" model="com.axelor.apps.flight.db.ActualDuty">
+      <field name="durationDifference" expr="eval: duty.currentDuration - actualDuration" />
+   </action-record>
+
+</object-views>

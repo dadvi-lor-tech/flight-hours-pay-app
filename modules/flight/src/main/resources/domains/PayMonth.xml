@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<domain-models xmlns='http://axelor.com/xml/ns/domain-models' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xsi:schemaLocation='http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.2.xsd'>
+
+   <module name="flight" package="com.axelor.apps.flight.db" />
+
+   <entity name="PayMonth" jsonAttrs="false">
+
+      <date name="fromDate" title="From" />
+      <date name="toDate" title="To" />
+
+      <decimal name="baseSalary" title="Base salary" />
+      <decimal name="flightSalary" title="Flight Salary" />
+      <decimal name="totalSalary" title="Total salary" />
+
+      <integer name="stepNb" title="Number of steps" />
+      <decimal name="threshold" title="Threshold" />
+
+      <decimal name="scheduledHours" title="Scheduled hours" />
+      <decimal name="actualHours" title="Actual hours" />
+      <decimal name="differenceHours" title="Difference hours" />
+
+      <decimal name="overtimeHours" title="Overtime hours" />
+      <decimal name="overtimeValue" title="Overtime value" />
+
+      <integer name="woffNb" title="Number of WOFF" />
+      <decimal name="woffValue" title="WOFF value" />
+      <integer name="oobNb" title="Number of OOB" help="OOB: Out Of Base" />
+      <decimal name="oobValue" title="OOB value" />
+      <integer name="alNb" title="Number of AL" />
+      <decimal name="alValue" title="AL value" />
+
+   </entity>
+
+</domain-models>
