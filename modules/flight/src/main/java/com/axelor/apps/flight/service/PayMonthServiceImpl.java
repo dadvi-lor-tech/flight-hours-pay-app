@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import com.axelor.apps.flight.db.ActualDuty;
+import com.axelor.apps.flight.db.Duty;
 import com.axelor.apps.flight.db.PayMonth;
 import com.axelor.apps.flight.db.Sbh;
 import com.axelor.apps.flight.db.repo.ActualDutyRepository;
@@ -16,8 +17,8 @@ import com.google.inject.persist.Transactional;
 
 public class PayMonthServiceImpl implements PayMonthService {
 
-  private static final BigDecimal OOB_UNIT_VALUE = BigDecimal.valueOf(75);
-  private static final BigDecimal WOFF_UNIT_VALUE = BigDecimal.valueOf(400);
+  protected static final BigDecimal OOB_UNIT_VALUE = BigDecimal.valueOf(75);
+  protected static final BigDecimal WOFF_UNIT_VALUE = BigDecimal.valueOf(400);
 
   @Transactional
   @Override
@@ -33,7 +34,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     computeTotal(payMonth);
   }
 
-  private void computeActualHours(PayMonth payMonth) {
+  protected void computeActualHours(PayMonth payMonth) {
     List<ActualDuty> actualDuties =
         Beans.get(ActualDutyRepository.class)
             .all()
@@ -50,7 +51,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     payMonth.setActualHours(BigDecimal.valueOf(actualHours));
   }
 
-  private void computeFlightPay(PayMonth payMonth) throws FlightException {
+  protected void computeFlightPay(PayMonth payMonth) throws FlightException {
     BigDecimal hours = payMonth.getScheduledHours();
 
     LocalDate now = LocalDate.now();
@@ -68,7 +69,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     payMonth.setFlightSalary(hours.multiply(sbhOpt.get().getHourlyRate()));
   }
 
-  private void computeThreshold(PayMonth payMonth) {
+  protected void computeThreshold(PayMonth payMonth) {
     BigDecimal subtrahend =
         BigDecimal.valueOf(payMonth.getStepNb())
             .subtract(BigDecimal.valueOf(20))
@@ -78,7 +79,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     payMonth.setThreshold(computedThreshold.max(BigDecimal.valueOf(67)));
   }
 
-  private void computeOvertime(PayMonth payMonth) {
+  protected void computeOvertime(PayMonth payMonth) {
     BigDecimal threshold = payMonth.getThreshold();
 
     if (payMonth.getActualHours().compareTo(threshold) > 0) {
@@ -90,7 +91,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     payMonth.setOvertimeValue(payMonth.getOvertimeHours().multiply(BigDecimal.valueOf(0.25)));
   }
 
-  private void computeTotal(PayMonth payMonth) {
+  protected void computeTotal(PayMonth payMonth) {
     BigDecimal total =
         payMonth
             .getBaseSalary()
@@ -103,7 +104,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     payMonth.setTotalSalary(total);
   }
 
-  private void computeExtras(PayMonth payMonth) {
+  protected void computeExtras(PayMonth payMonth) {
     List<ActualDuty> actualDuties =
         Beans.get(ActualDutyRepository.class)
             .all()
@@ -122,21 +123,22 @@ public class PayMonthServiceImpl implements PayMonthService {
     countWoff(payMonth, actualDuties);
   }
 
-  private void countOob(PayMonth payMonth, List<ActualDuty> actualDuties) {
+  protected void countOob(PayMonth payMonth, List<ActualDuty> actualDuties) {
     Integer oobNb = (int) actualDuties.stream().filter(ActualDuty::getIsOob).count();
     payMonth.setOobNb(oobNb);
     payMonth.setOobValue(OOB_UNIT_VALUE.multiply(BigDecimal.valueOf(oobNb)));
   }
 
-  private void countAl(PayMonth payMonth, List<ActualDuty> actualDuties) {
+  protected void countAl(PayMonth payMonth, List<ActualDuty> actualDuties) {
     int alNb = 0;
     BigDecimal alValue = BigDecimal.ZERO;
 
     for (ActualDuty actualDuty : actualDuties) {
-      if (actualDuty.getDuty().getIsLeave()) {
+      Duty duty = actualDuty.getDuty();
+      if (duty.getIsLeave()) {
         alNb++;
         // TODO: check
-        alValue = alValue.add(actualDuty.getDuty().getDailyRate());
+        alValue = alValue.add(duty.getDailyRate());
       }
     }
 
@@ -144,7 +146,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     payMonth.setAlValue(alValue);
   }
 
-  private void countWoff(PayMonth payMonth, List<ActualDuty> actualDuties) {
+  protected void countWoff(PayMonth payMonth, List<ActualDuty> actualDuties) {
     Integer woffNb = (int) actualDuties.stream().filter(ActualDuty::getIsWoff).count();
     payMonth.setWoffNb(woffNb);
     payMonth.setWoffValue(WOFF_UNIT_VALUE.multiply(BigDecimal.valueOf(woffNb)));
