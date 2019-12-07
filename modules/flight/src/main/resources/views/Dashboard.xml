@@ -35,7 +35,7 @@
             self.actualDuration AS hours
          FROM ActualDuty
          WHERE self.departureDate - period > startDate
-            AND self.departureDate < endDate;
+            AND self.departureDate &lt; endDate;
       </dataset>
       <category key="day" title="Day" type="date" />
       <series key="hours" title="Cumulated hours on last period" type="line" />
