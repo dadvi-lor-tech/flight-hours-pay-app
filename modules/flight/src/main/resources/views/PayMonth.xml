@@ -4,7 +4,7 @@
 
   <grid name="pay-month-grid" title="Payslips" model="com.axelor.apps.flight.db.PayMonth">
     <field name="fromDate" />
-    <!-- TODO: add other fields -->
+    <field name="toDate" />
     <field name="totalSalary" />
   </grid>
 
