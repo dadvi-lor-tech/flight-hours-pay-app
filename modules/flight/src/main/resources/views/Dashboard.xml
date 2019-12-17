@@ -1,44 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
 
-   <dashboard name="hours.dashboard" title="Hours dashboard">
-      <dashlet action="cumulated.hours.year.chart" />
-      <dashlet action="cumulated.hours.last.period.charts" />
-   </dashboard>
+  <dashboard name="hours.dashboard" title="Hours dashboard">
+    <dashlet action="dashlet.cumulated.hours.year" colSpan="12" />
+    <dashlet action="dashlet.cumulated.hours.last.period" colSpan="12" />
+  </dashboard>
 
-   <chart name="cumulated.hours.year.chart" title="Cumulated hours">
-      <search-fields>
-         <field name="year" title="Year" type="integer" selection="year.select" />
-      </search-fields>
-      <!-- TODO: hours must cumulate themselves -->
-      <dataset type="jpql">
-         SELECT
-            self.departureDate AS day, 
-            self.actualDuration AS hours
-         FROM ActualDuty
- --        TODO: extract year
-         WHERE self.departureDate.year = :year;
-      </dataset>
-      <category key="day" title="Day" type="date" />
-      <series key="hours" title="Cumulated hours" type="line" />
-   </chart>
+  <action-view name="dashlet.cumulated.hours.year" title="Cumulated hours on year">
+    <view type="chart" name="chart.dashboard.opportunities.source.amount.bar" />
+  </action-view>
 
-   <chart name="cumulated.hours.last.period.charts" title="Cumulated hours">
-      <search-fields>
-         <field name="startDate" title="Start date" type="date" />
-         <field name="endDate" title="End date" type="date" />
-      </search-fields>
-      <dataset type="jpql">
-         SELECT
-            self.date AS day,
-            self.actualDuration AS hours
-         FROM ActualDuty
-         WHERE self.departureDate - period > startDate
-            AND self.departureDate &lt; endDate;
-      </dataset>
-      <category key="day" title="Day" type="date" />
-      <series key="hours" title="Cumulated hours on last period" type="line" />
-   </chart>
+  <action-view name="dashlet.cumulated.hours.last.period" title="Cumulated hours on period">
+    <view type="chart" name="cumulated.hours.last.period.charts" />
+  </action-view>
 
 </object-views>
