@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 import com.axelor.apps.flight.db.ActualDuty;
 import com.axelor.apps.flight.db.Duty;
 import com.axelor.apps.flight.db.PayMonth;
@@ -38,7 +39,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     List<ActualDuty> actualDuties =
         Beans.get(ActualDutyRepository.class)
             .all()
-            .filter("self.departureDate BETWEEN fromDate AND toDate")
+            .filter("self.departureDate BETWEEN :fromDate AND :toDate")
             .bind("fromDate", payMonth.getFromDate())
             .bind("toDate", payMonth.getToDate())
             .fetch();
@@ -108,7 +109,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     List<ActualDuty> actualDuties =
         Beans.get(ActualDutyRepository.class)
             .all()
-            .filter("self.departureDate BETWEEN fromDate AND toDate")
+            .filter("self.departureDate BETWEEN :fromDate AND :toDate")
             .bind("fromDate", payMonth.getFromDate())
             .bind("toDate", payMonth.getToDate())
             .fetch();
