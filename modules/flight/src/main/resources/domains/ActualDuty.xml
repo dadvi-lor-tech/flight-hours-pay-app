@@ -1,20 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <domain-models xmlns='http://axelor.com/xml/ns/domain-models' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-   xsi:schemaLocation='http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.2.xsd'>
+  xsi:schemaLocation='http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.2.xsd'>
 
-   <module name="flight" package="com.axelor.apps.flight.db" />
+  <module name="flight" package="com.axelor.apps.flight.db" />
 
-   <entity name="ActualDuty" jsonAttrs="false">
+  <entity name="ActualDuty" jsonAttrs="false">
 
-      <date name="departureDate" title="Departure date" />
-      <many-to-one name="duty" title="Duty" ref="com.axelor.apps.flight.db.Duty" />
+    <date name="departureDate" title="Departure date" required="true" />
+    <many-to-one name="duty" title="Duty" ref="com.axelor.apps.flight.db.Duty" required="true" />
 
-      <integer name="actualDuration" title="Actual duration" />
-      <integer name="durationDifference" title="Duration difference" />
+    <integer name="estimatedInboundDuration" title="Estimated inbound duration" default="0" />
+    <integer name="estimatedOutboundDuration" title="Estimated outbound duration" default="0" />
 
-      <boolean name="isWoff" title="WOFF" />
-      <boolean name="isOob" title="Out Of Base" />
+    <integer name="actualDuration" title="Actual duration" />
+    <integer name="durationDifference" title="Duration difference" />
 
-   </entity>
+    <boolean name="isWoff" title="WOFF" default="false" />
+    <boolean name="isOob" title="Out Of Base" default="false" />
+
+  </entity>
 
 </domain-models>

@@ -1,18 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <domain-models xmlns='http://axelor.com/xml/ns/domain-models' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-   xsi:schemaLocation='http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.2.xsd'>
+  xsi:schemaLocation='http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.2.xsd'>
 
-   <module name="flight" package="com.axelor.apps.flight.db" />
+  <module name="flight" package="com.axelor.apps.flight.db" />
 
-   <entity name="ScheduledTime" jsonAttrs="false">
+  <entity name="ScheduledTime" jsonAttrs="false">
 
-      <date name="startDate" title="Start date" />
-      <date name="endDate" title="End date" />
-      <integer name="inboundDuration" title="Inbound duration" />
-      <integer name="outboundDuration" title="Outbound duration" />
+    <date name="startDate" title="Start date" />
+    <date name="endDate" title="End date" />
+    <integer name="inboundDuration" title="Inbound duration" />
+    <integer name="outboundDuration" title="Outbound duration" />
 
-      <many-to-one name="duty" title="Duty" ref="com.axelor.apps.flight.db.Duty" />
+    <many-to-one name="duty" title="Duty" ref="com.axelor.apps.flight.db.Duty" />
 
-   </entity>
+  </entity>
 
 </domain-models>

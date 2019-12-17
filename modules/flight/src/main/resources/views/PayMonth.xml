@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
 
-   <grid name="pay-month-grid" title="Payslips" model="com.axelor.apps.flight.db.PayMonth">
+  <grid name="pay-month-grid" title="Payslips" model="com.axelor.apps.flight.db.PayMonth">
+    <field name="fromDate" />
+    <!-- TODO: add other fields -->
+    <field name="totalSalary" />
+  </grid>
+
+  <form name="pay-month-form" title="Payslip" model="com.axelor.apps.flight.db.PayMonth">
+    <panel>
       <field name="fromDate" />
-      <!-- TODO: add other fields -->
-      <field name="totalSalary" />
-   </grid>
+      <field name="toDate" />
+    </panel>
 
-   <form name="pay-month-form" title="Payslip" model="com.axelor.apps.flight.db.PayMonth">
-      <panel>
-         <field name="fromDate" />
-         <field name="toDate" />
-      </panel>
+    <panel>
+      <field name="baseSalary" />
+      <field name="flightSalary" />
+      <field name="stepNb" />
+      <field name="threshold" />
 
-      <panel>
-         <field name="baseSalary" />
-         <field name="flightSalary" />
-         <field name="stepNb" />
-         <field name="threshold" />
+      <field name="scheduledHours" />
+      <field name="actualHours" />
+      <field name="differenceHours" />
 
-         <field name="scheduledHours" />
-         <field name="actualHours" />
-         <field name="differenceHours" />
+      <field name="overtimeHours" />
+      <field name="overtimeValue" />
+    </panel>
 
-         <field name="overtimeHours" />
-         <field name="overtimeValue" />
-      </panel>
+    <panel>
+      <field name="woffNb" />
+      <field name="woffValue" />
+      <field name="oobNb" />
+      <field name="oobValue" />
+      <field name="alNb" />
+      <field name="alValue" />
+    </panel>
 
-      <panel>
-         <field name="woffNb" />
-         <field name="woffValue" />
-         <field name="oobNb" />
-         <field name="oobValue" />
-         <field name="alNb" />
-         <field name="alValue" />
-      </panel>
-
-      <panel sidebar="true">
-         <button name="computeTotal" title="Compute total salary" onClick="com.axelor.apps.flight.web.PayMonthController:compute" />
-         <field name="totalSalary" />
-      </panel>
-   </form>
+    <panel sidebar="true">
+      <button name="computeTotal" title="Compute total salary" onClick="save, com.axelor.apps.flight.web.PayMonthController:compute" />
+      <field name="totalSalary" readonly="true" />
+    </panel>
+  </form>
 
 </object-views>

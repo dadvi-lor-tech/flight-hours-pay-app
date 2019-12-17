@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
 
-   <form id="user-form-flight" name="user-form" title="User" model="com.axelor.auth.db.User" extension="true">
-      <extend target="TODO">
-         <insert position="after">
-            <panel>
-               <field name="homebase" grid-view="airport-grid" form-view="airport-form" />
-               <field name="sbhList" grid-view="sbh-grid" form-view="sbh-form" colSpan="12" />
-            </panel>
-         </insert>
-      </extend>
-   </form>
+  <form id="user-form-flight" name="user-form" title="User" model="com.axelor.auth.db.User" extension="true">
+    <extend target="/panel[@title='Overview']">
+      <insert position="after">
+        <panel>
+          <field name="homebase" grid-view="airport-grid" form-view="airport-form" />
+          <field name="sbhList" grid-view="sbh-grid" form-view="sbh-form" colSpan="12" />
+        </panel>
+      </insert>
+    </extend>
+  </form>
 
 </object-views>

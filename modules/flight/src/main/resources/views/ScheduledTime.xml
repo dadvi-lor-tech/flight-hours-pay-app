@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
 
-   <grid name="scheduled-time-grid" title="Scheduled times" model="com.axelor.apps.flight.db.ScheduledTime">
+  <grid name="scheduled-time-grid" title="Scheduled times" model="com.axelor.apps.flight.db.ScheduledTime">
+    <field name="startDate" />
+    <field name="endDate" />
+    <field name="inboundDuration" widget="duration" />
+    <field name="outboundDuration" widget="duration" />
+  </grid>
+
+  <form name="scheduled-time-form" title="Scheduled time" model="com.axelor.apps.flight.db.ScheduledTime">
+    <panel>
       <field name="startDate" />
       <field name="endDate" />
-      <field name="duration" widget="duration" />
-   </grid>
-
-   <form name="scheduled-time-form" title="Scheduled time" model="com.axelor.apps.flight.db.ScheduledTime">
-      <panel>
-         <field name="startDate" />
-         <field name="endDate" />
-         <field name="duration" widget="duration" />
-      </panel>
-   </form>
+      <field name="inboundDuration" widget="duration" />
+      <field name="outboundDuration" widget="duration" />
+    </panel>
+  </form>
 
 </object-views>
