@@ -24,7 +24,7 @@
     <panel hideIf="duty.isLeave">
       <field name="estimatedInboundDuration" widget="duration" readonly="true" />
       <field name="estimatedOutboundDuration" widget="duration" readonly="true" />
-      <field name="actualDuration" widget="duration" onChange="action-actual-duty-record-set-diff" help="Input the total duration of this actual duty." />
+      <field name="actualDuration" widget="duration" onChange="action-actual-duty-record-set-diff" requiredIf="duty.isLeave" help="Input the total duration of this actual duty." />
       <field name="durationDifference" readonly="true" />
       <field name="isWoff" />
       <field name="isOob" />
