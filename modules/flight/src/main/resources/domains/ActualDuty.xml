@@ -13,7 +13,7 @@
     <integer name="estimatedOutboundDuration" title="Estimated outbound duration" default="0" />
 
     <integer name="actualDuration" title="Actual duration" />
-    <integer name="durationDifference" title="Duration difference" />
+    <integer name="durationDifference" title="Duration difference" help="Duration difference in minutes" />
 
     <boolean name="isWoff" title="WOFF" default="false" />
     <boolean name="isOob" title="Out Of Base" default="false" />

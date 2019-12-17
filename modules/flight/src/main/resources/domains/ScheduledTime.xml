@@ -6,9 +6,9 @@
 
   <entity name="ScheduledTime" jsonAttrs="false">
 
-    <date name="startDate" title="Start date" />
-    <date name="endDate" title="End date" />
-    <integer name="inboundDuration" title="Inbound duration" />
+    <date name="startDate" title="Start date" required="true" />
+    <date name="endDate" title="End date" required="true" />
+    <integer name="inboundDuration" title="Inbound duration" required="true" />
     <integer name="outboundDuration" title="Outbound duration" />
 
     <many-to-one name="duty" title="Duty" ref="com.axelor.apps.flight.db.Duty" />

@@ -6,8 +6,8 @@
 
   <entity name="Sbh" jsonAttrs="false">
 
-    <date name="startDate" title="Start date" />
-    <date name="endDate" title="End date" />
+    <date name="startDate" title="Start date" required="true" />
+    <date name="endDate" title="End date" required="true" />
 
     <decimal name="hourlyRate" title="Hourly rate" precision="8" scale="2" />
 
