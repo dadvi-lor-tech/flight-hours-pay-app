@@ -2,7 +2,7 @@
 <object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
 
-  <chart name="cumulated.hours.year.chart" title="Cumulated hours on year" onInit="action-chart-record-default-year">
+  <chart name="cumulated.hours.year.chart" title="Cumulated hours on year" onInit="action-chart-attrs-default-year">
     <search-fields>
       <field name="year" title="Year" type="integer" selection="year.select" />
     </search-fields>
@@ -18,33 +18,32 @@
     <series key="hours" title="Cumulated hours" type="line" />
   </chart>
 
-  <action-record name="action-chart-record-default-year" model="com.axelor.apps.flight.db.ActualDuty">
-    <field name="year" expr="eval: LocalDate.now().getYear()" />
-  </action-record>
+  <action-attrs name="action-chart-attrs-default-year">
+    <attribute name="value" for="year" expr="eval: LocalDate.now().getYear()" />
+  </action-attrs>
 
-  <chart name="cumulated.hours.last.period.charts" title="Cumulated hours on period" onInit="action-chart-record-default-dates">
+  <chart name="cumulated.hours.last.period.charts" title="Cumulated hours on period" onInit="action-chart-attrs-default-dates">
     <search-fields>
       <field name="startDate" title="Start date" type="date" />
       <field name="endDate" title="End date" type="date" />
     </search-fields>
     <!-- TODO: hours must cumulate themselves -->
     <dataset type="jpql">
-         SELECT
-            self.departureDate AS day,
-            self.actualDuration / 3600 AS hours
-         FROM ActualDuty self
-         WHERE self.duty.isLeave = 'f'
-            AND self.departureDate &gt; :startDate
-            AND self.departureDate &lt; :endDate
+        SELECT
+          self.departureDate AS day,
+          self.actualDuration / 3600 AS hours
+        FROM ActualDuty self
+        WHERE self.duty.isLeave = 'f'
+          AND self.departureDate &gt; :startDate
+          AND self.departureDate &lt; :endDate
       </dataset>
     <category key="day" title="Day" type="date" />
     <series key="hours" title="Cumulated hours on last period" type="line" />
   </chart>
 
-  <!-- TODO: Use wizard object -->
-  <action-record name="action-chart-record-default-dates" model="com.axelor.apps.flight.db.ActualDuty">
-    <field name="startDate" expr="eval: LocalDate.now().withDayOfMonth(1)" />
-    <field name="endDate" expr="eval: LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth())" />
-  </action-record>
+  <action-attrs name="action-chart-attrs-default-dates">
+    <attribute name="value" for="startDate" expr="eval: LocalDate.now().withDayOfMonth(1)" />
+    <attribute name="value" for="endDate" expr="eval: LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth())" />
+  </action-attrs>
 
 </object-views>
