@@ -52,7 +52,7 @@
   </action-record>
 
   <action-record name="action-actual-duty-record-set-diff" model="com.axelor.apps.flight.db.ActualDuty">
-    <field name="durationDifference" expr="eval: (estimatedInboundDuration + estimatedOutboundDuration - actualDuration) / 60" />
+    <field name="durationDifference" expr="eval: (actualDuration - estimatedInboundDuration - estimatedOutboundDuration) / 60" />
   </action-record>
 
 </object-views>

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.axelor.apps.flight.db.ActualDuty;
-import com.axelor.apps.flight.db.Duty;
 import com.axelor.apps.flight.db.LeaveRate;
 import com.axelor.apps.flight.db.PayMonth;
 import com.axelor.apps.flight.db.Sbh;
@@ -19,13 +18,16 @@ import com.google.inject.persist.Transactional;
 
 public class PayMonthServiceImpl implements PayMonthService {
 
-  protected static final BigDecimal OOB_UNIT_VALUE = BigDecimal.valueOf(75);
-  protected static final BigDecimal WOFF_UNIT_VALUE = BigDecimal.valueOf(400);
+  private static final BigDecimal THRESHOLD_MINIMUM = BigDecimal.valueOf(67);
+  private static final BigDecimal OVERTIME_VALUE = BigDecimal.valueOf(0.25);
+
+  private static final BigDecimal OOB_UNIT_VALUE = BigDecimal.valueOf(75);
+  private static final BigDecimal WOFF_UNIT_VALUE = BigDecimal.valueOf(400);
 
   @Override
   @Transactional(rollbackOn = {FlightException.class, RuntimeException.class})
   public void compute(PayMonth payMonth) throws FlightException {
-    computeActualHours(payMonth);
+    computeHours(payMonth);
     computeFlightPay(payMonth);
 
     computeThreshold(payMonth);
@@ -36,41 +38,58 @@ public class PayMonthServiceImpl implements PayMonthService {
     computeTotal(payMonth);
   }
 
-  protected void computeActualHours(PayMonth payMonth) {
-    List<ActualDuty> actualDuties =
-        Beans.get(ActualDutyRepository.class)
-            .all()
-            .filter("self.duty.isLeave = 'f' AND self.departureDate BETWEEN :fromDate AND :toDate")
-            .bind("fromDate", payMonth.getFromDate())
-            .bind("toDate", payMonth.getToDate())
-            .fetch();
+  /**
+   * Computes the number of scheduled and actual hours in the pay month.
+   *
+   * @param payMonth
+   */
+  protected void computeHours(PayMonth payMonth) {
+    List<ActualDuty> actualDuties = getPeriodDuties(payMonth);
 
-    Integer actualHours =
+    int scheduledDuration =
         actualDuties
             .stream()
-            .map(ActualDuty::getActualDuration)
-            .reduce(Integer.valueOf(0), Integer::sum);
-    payMonth.setActualHours(BigDecimal.valueOf(actualHours));
+            .mapToInt(
+                duty -> duty.getEstimatedInboundDuration() + duty.getEstimatedOutboundDuration())
+            .sum();
+    int actualDuration = actualDuties.stream().mapToInt(ActualDuty::getActualDuration).sum();
+
+    payMonth.setScheduledDuration(scheduledDuration);
+    payMonth.setActualDuration(actualDuration);
+    payMonth.setDifferenceHours((actualDuration - scheduledDuration) / 3600);
   }
 
+  /**
+   * Computes the flight pay according to the hourly rate at the last day of the pay month
+   *
+   * @param payMonth
+   * @throws FlightException
+   */
   protected void computeFlightPay(PayMonth payMonth) throws FlightException {
-    BigDecimal hours = payMonth.getScheduledHours();
+    Integer hours = payMonth.getScheduledDuration();
 
-    LocalDate now = LocalDate.now();
+    LocalDate payDate = payMonth.getToDate();
     Optional<Sbh> sbhOpt =
         AuthUtils.getUser()
             .getSbhList()
             .stream()
-            .filter(sbh -> now.isAfter(sbh.getStartDate()) && now.isBefore(sbh.getEndDate()))
+            .filter(
+                sbh -> payDate.isAfter(sbh.getStartDate()) && !payDate.isAfter(sbh.getEndDate()))
             .findAny();
 
     if (!sbhOpt.isPresent()) {
       throw new FlightException("Please fill your current SBH.");
     }
 
-    payMonth.setFlightSalary(hours.multiply(sbhOpt.get().getHourlyRate()));
+    payMonth.setFlightSalary(
+        sbhOpt.get().getHourlyRate().multiply(BigDecimal.valueOf(hours / 3600)));
   }
 
+  /**
+   * Computes the threshold according to some given computation rules.
+   *
+   * @param payMonth
+   */
   protected void computeThreshold(PayMonth payMonth) {
     BigDecimal subtrahend =
         BigDecimal.valueOf(payMonth.getStepNb())
@@ -78,19 +97,22 @@ public class PayMonthServiceImpl implements PayMonthService {
             .divide(BigDecimal.valueOf(6), 4, RoundingMode.HALF_UP);
     BigDecimal computedThreshold = BigDecimal.valueOf(75).subtract(subtrahend);
 
-    payMonth.setThreshold(computedThreshold.max(BigDecimal.valueOf(67)));
+    payMonth.setThreshold(computedThreshold.max(THRESHOLD_MINIMUM));
   }
 
   protected void computeOvertime(PayMonth payMonth) {
     BigDecimal threshold = payMonth.getThreshold();
+    BigDecimal actualHours =
+        BigDecimal.valueOf(payMonth.getActualDuration())
+            .divide(BigDecimal.valueOf(3600), 4, RoundingMode.HALF_UP);
 
-    if (payMonth.getActualHours().compareTo(threshold) > 0) {
-      payMonth.setOvertimeHours(payMonth.getActualHours().subtract(threshold));
+    if (actualHours.compareTo(threshold) > 0) {
+      payMonth.setOvertimeHours(actualHours.subtract(threshold));
     } else {
       payMonth.setOvertimeHours(BigDecimal.ZERO);
     }
 
-    payMonth.setOvertimeValue(payMonth.getOvertimeHours().multiply(BigDecimal.valueOf(0.25)));
+    payMonth.setOvertimeValue(payMonth.getOvertimeHours().multiply(OVERTIME_VALUE));
   }
 
   protected void computeTotal(PayMonth payMonth) {
@@ -107,13 +129,7 @@ public class PayMonthServiceImpl implements PayMonthService {
   }
 
   protected void computeExtras(PayMonth payMonth) throws FlightException {
-    List<ActualDuty> actualDuties =
-        Beans.get(ActualDutyRepository.class)
-            .all()
-            .filter("self.departureDate BETWEEN :fromDate AND :toDate")
-            .bind("fromDate", payMonth.getFromDate())
-            .bind("toDate", payMonth.getToDate())
-            .fetch();
+    List<ActualDuty> actualDuties = getPeriodDuties(payMonth);
 
     // OOB computation
     countOob(payMonth, actualDuties);
@@ -123,6 +139,15 @@ public class PayMonthServiceImpl implements PayMonthService {
 
     // WOFF computation
     countWoff(payMonth, actualDuties);
+  }
+
+  private List<ActualDuty> getPeriodDuties(PayMonth payMonth) {
+    return Beans.get(ActualDutyRepository.class)
+        .all()
+        .filter("self.departureDate BETWEEN :fromDate AND :toDate")
+        .bind("fromDate", payMonth.getFromDate())
+        .bind("toDate", payMonth.getToDate())
+        .fetch();
   }
 
   protected void countOob(PayMonth payMonth, List<ActualDuty> actualDuties) {
@@ -136,10 +161,9 @@ public class PayMonthServiceImpl implements PayMonthService {
     BigDecimal alValue = BigDecimal.ZERO;
 
     for (ActualDuty actualDuty : actualDuties) {
-      Duty duty = actualDuty.getDuty();
-      if (Boolean.TRUE.equals(duty.getIsLeave())) {
+      if (Boolean.TRUE.equals(actualDuty.getDuty().getIsLeave())) {
         alNb++;
-        alValue = alValue.add(computeLeaveValue(actualDuty, duty));
+        alValue = alValue.add(computeLeaveValue(actualDuty));
       }
     }
 
@@ -147,17 +171,18 @@ public class PayMonthServiceImpl implements PayMonthService {
     payMonth.setAlValue(alValue);
   }
 
-  private BigDecimal computeLeaveValue(ActualDuty actualDuty, Duty duty) throws FlightException {
+  private BigDecimal computeLeaveValue(ActualDuty actualDuty) throws FlightException {
     LocalDate leaveDate = actualDuty.getDepartureDate();
     Optional<LeaveRate> currentLeaveRate =
-        duty.getLeaveRateList()
+        actualDuty
+            .getDuty()
+            .getLeaveRateList()
             .stream()
             .filter(
                 rate ->
                     leaveDate.isAfter(rate.getStartDate()) && leaveDate.isBefore(rate.getEndDate()))
             .findAny();
 
-    // TODO: check
     return currentLeaveRate
         .orElseThrow(() -> new FlightException("Please fill a leave rate to apply on " + leaveDate))
         .getDailyRate();

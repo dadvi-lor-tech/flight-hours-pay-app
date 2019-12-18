@@ -9,26 +9,30 @@
   </grid>
 
   <form name="pay-month-form" title="Payslip" model="com.axelor.apps.flight.db.PayMonth">
-    <panel>
+    <panel name="datePanel">
       <field name="fromDate" />
       <field name="toDate" />
     </panel>
 
-    <panel>
+    <panel name="manualSalaryPanel">
       <field name="baseSalary" />
-      <field name="flightSalary" />
+      <field name="flightSalary" readonly="true" />
+    </panel>
+
+    <panel name="computedSalaryPanel" readonly="true">
       <field name="stepNb" />
       <field name="threshold" />
 
-      <field name="scheduledHours" />
-      <field name="actualHours" />
+      <field name="scheduledDuration" widget="duration" />
+      <field name="actualDuration" widget="duration" />
       <field name="differenceHours" />
+      <spacer />
 
       <field name="overtimeHours" />
       <field name="overtimeValue" />
     </panel>
 
-    <panel>
+    <panel name="extraPanel" readonly="true">
       <field name="woffNb" />
       <field name="woffValue" />
       <field name="oobNb" />
@@ -37,7 +41,7 @@
       <field name="alValue" />
     </panel>
 
-    <panel sidebar="true">
+    <panel name="sidePanel" sidebar="true">
       <button name="computeTotal" title="Compute total salary" onClick="save, com.axelor.apps.flight.web.PayMonthController:compute" />
       <field name="totalSalary" readonly="true" />
     </panel>
