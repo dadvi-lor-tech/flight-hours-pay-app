@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import com.axelor.apps.flight.db.ActualDuty;
 import com.axelor.apps.flight.db.Duty;
+import com.axelor.apps.flight.db.LeaveRate;
 import com.axelor.apps.flight.db.PayMonth;
 import com.axelor.apps.flight.db.Sbh;
 import com.axelor.apps.flight.db.repo.ActualDutyRepository;
@@ -39,7 +40,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     List<ActualDuty> actualDuties =
         Beans.get(ActualDutyRepository.class)
             .all()
-            .filter("self.departureDate BETWEEN :fromDate AND :toDate")
+            .filter("self.duty.isLeave = 'f' AND self.departureDate BETWEEN :fromDate AND :toDate")
             .bind("fromDate", payMonth.getFromDate())
             .bind("toDate", payMonth.getToDate())
             .fetch();
@@ -105,7 +106,7 @@ public class PayMonthServiceImpl implements PayMonthService {
     payMonth.setTotalSalary(total);
   }
 
-  protected void computeExtras(PayMonth payMonth) {
+  protected void computeExtras(PayMonth payMonth) throws FlightException {
     List<ActualDuty> actualDuties =
         Beans.get(ActualDutyRepository.class)
             .all()
@@ -130,21 +131,36 @@ public class PayMonthServiceImpl implements PayMonthService {
     payMonth.setOobValue(OOB_UNIT_VALUE.multiply(BigDecimal.valueOf(oobNb)));
   }
 
-  protected void countAl(PayMonth payMonth, List<ActualDuty> actualDuties) {
+  protected void countAl(PayMonth payMonth, List<ActualDuty> actualDuties) throws FlightException {
     int alNb = 0;
     BigDecimal alValue = BigDecimal.ZERO;
 
     for (ActualDuty actualDuty : actualDuties) {
       Duty duty = actualDuty.getDuty();
-      if (duty.getIsLeave()) {
+      if (Boolean.TRUE.equals(duty.getIsLeave())) {
         alNb++;
-        // TODO: check
-        alValue = alValue.add(duty.getDailyRate());
+        alValue = alValue.add(computeLeaveValue(actualDuty, duty));
       }
     }
 
     payMonth.setAlNb(alNb);
     payMonth.setAlValue(alValue);
+  }
+
+  private BigDecimal computeLeaveValue(ActualDuty actualDuty, Duty duty) throws FlightException {
+    LocalDate leaveDate = actualDuty.getDepartureDate();
+    Optional<LeaveRate> currentLeaveRate =
+        duty.getLeaveRateList()
+            .stream()
+            .filter(
+                rate ->
+                    leaveDate.isAfter(rate.getStartDate()) && leaveDate.isBefore(rate.getEndDate()))
+            .findAny();
+
+    // TODO: check
+    return currentLeaveRate
+        .orElseThrow(() -> new FlightException("Please fill a leave rate to apply on " + leaveDate))
+        .getDailyRate();
   }
 
   protected void countWoff(PayMonth payMonth, List<ActualDuty> actualDuties) {

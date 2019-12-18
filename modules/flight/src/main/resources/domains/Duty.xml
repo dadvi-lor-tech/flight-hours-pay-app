@@ -16,9 +16,7 @@
     <integer name="currentOutboundDuration" title="Current outbound duration" default="0" />
 
     <boolean name="isLeave" title="Leave ?" />
-    <decimal name="dailyRate" title="Daily rate" />
-    <date name="startDate" title="Start date" />
-    <date name="endDate" title="End date" />
+    <one-to-many name="leaveRateList" title="Leave rates" ref="com.axelor.apps.flight.db.LeaveRate" mappedBy="duty" />
 
   </entity>
 

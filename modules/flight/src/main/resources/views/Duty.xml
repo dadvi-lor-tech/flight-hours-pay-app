@@ -15,11 +15,7 @@
       <field name="name" />
       <field name="isLeave" onChange="action-duty-record-reset-fields" />
     </panel>
-    <panel showIf="isLeave">
-      <field name="startDate" />
-      <field name="endDate" />
-      <field name="dailyRate" />
-    </panel>
+    <panel-related field="leaveRateList" grid-view="leave-rate-grid" form-view="leave-rate-form" showIf="isLeave" />
     <panel hideIf="isLeave">
       <field name="departureAirport" />
       <field name="arrivalAirport" />
