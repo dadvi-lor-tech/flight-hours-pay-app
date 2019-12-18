@@ -22,8 +22,8 @@ public class PayMonthServiceImpl implements PayMonthService {
   protected static final BigDecimal OOB_UNIT_VALUE = BigDecimal.valueOf(75);
   protected static final BigDecimal WOFF_UNIT_VALUE = BigDecimal.valueOf(400);
 
-  @Transactional
   @Override
+  @Transactional(rollbackOn = {FlightException.class, RuntimeException.class})
   public void compute(PayMonth payMonth) throws FlightException {
     computeActualHours(payMonth);
     computeFlightPay(payMonth);
