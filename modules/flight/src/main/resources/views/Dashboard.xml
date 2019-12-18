@@ -8,7 +8,7 @@
   </dashboard>
 
   <action-view name="dashlet.cumulated.hours.year" title="Cumulated hours on year">
-    <view type="chart" name="chart.dashboard.opportunities.source.amount.bar" />
+    <view type="chart" name="cumulated.hours.year.chart" />
   </action-view>
 
   <action-view name="dashlet.cumulated.hours.last.period" title="Cumulated hours on period">

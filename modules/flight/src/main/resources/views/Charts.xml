@@ -2,7 +2,7 @@
 <object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
 
-  <chart name="cumulated.hours.year.chart" title="Cumulated hours on year">
+  <chart name="cumulated.hours.year.chart" title="Cumulated hours on year" onInit="action-chart-record-default-year">
     <search-fields>
       <field name="year" title="Year" type="integer" selection="year.select" />
     </search-fields>
@@ -12,12 +12,15 @@
             self.departureDate AS day, 
             self.actualDuration AS hours
          FROM ActualDuty self
- --        TODO: extract year
-         WHERE self.departureDate.year = :year
+         WHERE to_char(self.departureDate, 'YYYY') = :year
       </dataset>
     <category key="day" title="Day" type="date" />
     <series key="hours" title="Cumulated hours" type="line" />
   </chart>
+
+  <action-record name="action-chart-record-default-year" model="com.axelor.apps.flight.db.ActualDuty">
+    <field name="year" expr="eval: LocalDate.now().getYear()" />
+  </action-record>
 
   <chart name="cumulated.hours.last.period.charts" title="Cumulated hours on period" onInit="action-chart-record-default-dates">
     <search-fields>
