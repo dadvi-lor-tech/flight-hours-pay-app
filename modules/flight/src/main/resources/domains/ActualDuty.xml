@@ -15,7 +15,7 @@
     <integer name="actualDuration" title="Actual duration" />
     <integer name="durationDifference" title="Duration difference" help="Duration difference in minutes" />
 
-    <boolean name="isWoff" title="WOFF" default="false" />
+    <boolean name="isWoff" title="WOFF" default="false" help="Working Out Of Base" />
     <boolean name="isOob" title="Out Of Base" default="false" />
 
   </entity>
