@@ -6,7 +6,7 @@
     <field name="duty" />
   </calendar>
 
-  <grid name="actual-duty-grid" title="Actual duties" model="com.axelor.apps.flight.db.ActualDuty">
+  <grid name="actual-duty-grid" title="Actual duties" model="com.axelor.apps.flight.db.ActualDuty" orderBy="-departureDate">
     <field name="departureDate" />
     <field name="duty" />
     <field name="actualDuration" widget="duration" />

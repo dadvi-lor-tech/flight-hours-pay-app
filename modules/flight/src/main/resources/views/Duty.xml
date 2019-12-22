@@ -6,8 +6,8 @@
     <field name="name" />
     <field name="departureAirport" />
     <field name="arrivalAirport" />
-    <field name="isRoundTrip" />
-    <field name="currentDuration" widget="duration" />
+    <field name="currentInboundDuration" widget="duration" />
+    <field name="currentOutboundDuration" widget="duration" />
   </grid>
 
   <form name="duty-form" title="Duty" model="com.axelor.apps.flight.db.Duty">
