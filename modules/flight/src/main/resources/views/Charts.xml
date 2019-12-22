@@ -12,23 +12,26 @@
         AND date_part('year', departure_date) = date_part('year', CURRENT_DATE)
       </dataset>
     <category key="day" title="Day" type="date" />
-    <series key="hours" title="Cumulated hours" type="line" />
+    <series key="hours" title="Cumulated hours on year" type="line" />
   </chart>
 
-  <chart name="cumulated.hours.last.period.charts" title="Cumulated hours on period" onInit="action-chart-attrs-default-dates">
-    <search-fields>
-      <field name="startDate" title="Start date" type="date" />
-      <field name="endDate" title="End date" type="date" />
-    </search-fields>
-    <!-- TODO: hours must cumulate themselves -->
-    <dataset type="jpql">
-        SELECT
-          self.departureDate AS day,
-          self.actualDuration / 3600 AS hours
-        FROM ActualDuty self
-        WHERE self.duty.isLeave = 'f'
-          AND self.departureDate &gt; :startDate
-          AND self.departureDate &lt; :endDate
+  <chart name="cumulated.hours.last.period.charts" title="Cumulated hours on period">
+    <dataset type="sql">
+      SELECT 
+        fad1.departure_date AS day,
+        t.hours
+      FROM
+          flight_actual_duty as fad1
+          INNER JOIN LATERAL (
+              SELECT 
+                  sum(actual_duration) / 3600.0 as hours
+              FROM 
+                  flight_actual_duty as fad2
+              WHERE 
+                  fad2.departure_date BETWEEN (fad1.departure_date - INTERVAL '28 DAY') AND fad1.departure_date
+          ) as t ON 1=1
+      WHERE duty IN (SELECT id FROM flight_duty WHERE is_leave = 'f')
+      ORDER BY day
       </dataset>
     <category key="day" title="Day" type="date" />
     <series key="hours" title="Cumulated hours on last period" type="line" />
