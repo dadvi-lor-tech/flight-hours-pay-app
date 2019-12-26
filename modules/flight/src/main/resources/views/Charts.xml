@@ -5,7 +5,7 @@
   <chart name="cumulated.hours.year.chart" title="Cumulated hours on year">
     <dataset type="sql">
       SELECT departure_date AS day,
-       SUM(actual_duration) 
+       SUM(actual_inbound_duration + actual_outbound_duration)
          OVER (PARTITION BY to_char(departure_date, 'YYYY') ORDER BY departure_date) / 3600.0 AS hours
       FROM flight_actual_duty
       WHERE duty IN (SELECT id FROM flight_duty WHERE is_leave = 'f')
@@ -24,7 +24,7 @@
           flight_actual_duty as fad1
           INNER JOIN LATERAL (
               SELECT 
-                  sum(actual_duration) / 3600.0 as hours
+                  SUM(actual_inbound_duration + actual_outbound_duration) / 3600.0 as hours
               FROM 
                   flight_actual_duty as fad2
               WHERE 
@@ -36,10 +36,5 @@
     <category key="day" title="Day" type="date" />
     <series key="hours" title="Cumulated hours on last period" type="line" />
   </chart>
-
-  <action-attrs name="action-chart-attrs-default-dates">
-    <attribute name="value" for="startDate" expr="eval: LocalDate.now().withDayOfMonth(1)" />
-    <attribute name="value" for="endDate" expr="eval: LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth())" />
-  </action-attrs>
 
 </object-views>
