@@ -13,4 +13,11 @@
     </extend>
   </form>
 
+  <form name="user-form-light" title="Profile" model="com.axelor.auth.db.User">
+    <panel>
+      <field name="homebase" grid-view="airport-grid" form-view="airport-form" />
+      <field name="sbhList" grid-view="sbh-grid" form-view="sbh-form" colSpan="12" />
+    </panel>
+  </form>
+
 </object-views>
