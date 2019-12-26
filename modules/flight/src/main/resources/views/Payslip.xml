@@ -2,16 +2,16 @@
 <object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
 
-  <grid name="pay-month-grid" title="Payslips" model="com.axelor.apps.flight.db.PayMonth">
-    <field name="fromDate" />
-    <field name="toDate" />
+  <grid name="payslip-grid" title="Payslips" model="com.axelor.apps.flight.db.Payslip" orderBy="-year,-month">
+    <field name="month" />
+    <field name="year" />
     <field name="totalSalary" />
   </grid>
 
-  <form name="pay-month-form" title="Payslip" model="com.axelor.apps.flight.db.PayMonth">
+  <form name="payslip-form" title="Payslip" model="com.axelor.apps.flight.db.Payslip" onNew="action-payslip-record-default">
     <panel name="datePanel">
-      <field name="fromDate" />
-      <field name="toDate" />
+      <field name="month" />
+      <field name="year" />
     </panel>
 
     <panel name="manualSalaryPanel">
@@ -20,12 +20,12 @@
     </panel>
 
     <panel name="computedSalaryPanel" readonly="true">
-      <field name="stepNb" />
+      <field name="sectorNb" />
       <field name="threshold" />
-
       <field name="scheduledDuration" widget="duration" />
       <field name="actualDuration" widget="duration" />
       <field name="differenceHours" />
+      <!-- TODO: review computation of diff hours, use hours with decimals -->
       <spacer />
 
       <field name="overtimeHours" />
@@ -42,9 +42,14 @@
     </panel>
 
     <panel name="sidePanel" sidebar="true">
-      <button name="computeTotal" title="Compute total salary" onClick="save, com.axelor.apps.flight.web.PayMonthController:compute" />
+      <button name="computeTotal" title="Compute total salary" onClick="save, com.axelor.apps.flight.web.PayslipController:compute" />
       <field name="totalSalary" readonly="true" />
     </panel>
   </form>
+
+  <action-record name="action-payslip-record-default" model="com.axelor.apps.flight.db.Payslip">
+    <field name="month" expr="eval: __date__.getMonthValue()" />
+    <field name="year" expr="eval: __date__.getYear()" />
+  </action-record>
 
 </object-views>

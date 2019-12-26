@@ -19,9 +19,9 @@
     <panel hideIf="isLeave">
       <field name="departureAirport" />
       <field name="arrivalAirport" />
-      <field name="currentInboundDuration" widget="duration" />
-      <field name="currentOutboundDuration" widget="duration" />
-      <field name="scheduledTime" colSpan="12" grid-view="scheduled-time-grid" form-view="scheduled-time-form" />
+      <field name="currentInboundDuration" widget="duration" readonly="true" />
+      <field name="currentOutboundDuration" widget="duration" readonly="true" />
+      <field name="scheduledTimeList" colSpan="12" grid-view="scheduled-time-grid" form-view="scheduled-time-form" />
     </panel>
   </form>
 
@@ -33,7 +33,7 @@
     <field name="arrivalAirport" expr="eval: null" if="isLeave" />
     <field name="currentInboundDuration" expr="eval: null" if="isLeave" />
     <field name="currentOutboundDuration" expr="eval: null" if="isLeave" />
-    <field name="scheduledTime" expr="eval: null" if="isLeave" />
+    <field name="scheduledTimeList" expr="eval: null" if="isLeave" />
   </action-record>
 
 </object-views>

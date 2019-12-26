@@ -4,21 +4,21 @@
 
   <module name="flight" package="com.axelor.apps.flight.db" />
 
-  <entity name="PayMonth" jsonAttrs="false">
+  <entity name="Payslip" jsonAttrs="false">
 
-    <date name="fromDate" title="From" required="true" />
-    <date name="toDate" title="To" required="true" />
+    <integer name="month" title="Month" selection="month.select"/>
+    <integer name="year" title="Year" selection="year.select"/>
 
     <decimal name="baseSalary" title="Base salary" />
     <decimal name="flightSalary" title="Flight Salary" />
     <decimal name="totalSalary" title="Total salary" />
 
-    <integer name="stepNb" title="Number of steps" />
+    <integer name="sectorNb" title="Number of sectors" />
     <decimal name="threshold" title="Threshold" />
 
     <integer name="scheduledDuration" title="Scheduled duration" />
     <integer name="actualDuration" title="Actual duration" />
-    <integer name="differenceHours" title="Difference hours" />
+    <decimal name="differenceHours" title="Difference hours" />
 
     <decimal name="overtimeHours" title="Overtime hours" />
     <decimal name="overtimeValue" title="Overtime value" />

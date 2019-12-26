@@ -9,7 +9,8 @@
   <grid name="actual-duty-grid" title="Actual duties" model="com.axelor.apps.flight.db.ActualDuty" orderBy="-departureDate">
     <field name="departureDate" />
     <field name="duty" />
-    <field name="actualDuration" widget="duration" />
+    <field name="actualInboundDuration" widget="duration" />
+    <field name="actualOutboundDuration" widget="duration" />
     <field name="durationDifference" />
     <field name="isWoff" />
     <field name="isOob" />
@@ -24,7 +25,8 @@
     <panel hideIf="duty.isLeave">
       <field name="estimatedInboundDuration" widget="duration" readonly="true" />
       <field name="estimatedOutboundDuration" widget="duration" readonly="true" />
-      <field name="actualDuration" widget="duration" onChange="action-actual-duty-record-set-diff" requiredIf="duty.isLeave" help="Input the total duration of this actual duty." />
+      <field name="actualInboundDuration" widget="duration" onChange="action-actual-duty-record-set-diff" requiredIf="duty.isLeave" />
+      <field name="actualOutboundDuration" widget="duration" onChange="action-actual-duty-record-set-diff" requiredIf="duty.isLeave" />
       <field name="durationDifference" readonly="true" />
       <field name="isWoff" />
       <field name="isOob" />
@@ -40,7 +42,8 @@
   <action-record name="action-actual-duty-record-clear" model="com.axelor.apps.flight.db.ActualDuty">
     <field name="estimatedInboundDuration" expr="eval: null" />
     <field name="estimatedOutboundDuration" expr="eval: null" />
-    <field name="actualDuration" expr="eval: null" />
+    <field name="actualInboundDuration" expr="eval: null" />
+    <field name="actualOutboundDuration" expr="eval: null" />
     <field name="durationDifference" expr="eval: null" />
     <field name="isWoff" expr="eval: null" />
     <field name="isOob" expr="eval: null" />
@@ -49,10 +52,12 @@
   <action-record name="action-actual-duty-record-set-estimated-durations" model="com.axelor.apps.flight.db.ActualDuty">
     <field name="estimatedInboundDuration" expr="eval: duty ? duty.currentInboundDuration : 0" />
     <field name="estimatedOutboundDuration" expr="eval: duty ? duty.currentOutboundDuration : 0" />
+    <field name="actualInboundDuration" expr="eval: 0" />
+    <field name="actualOutboundDuration" expr="eval: 0" />
   </action-record>
 
   <action-record name="action-actual-duty-record-set-diff" model="com.axelor.apps.flight.db.ActualDuty">
-    <field name="durationDifference" expr="eval: (actualDuration - estimatedInboundDuration - estimatedOutboundDuration) / 60" />
+    <field name="durationDifference" expr="eval: (actualInboundDuration + actualOutboundDuration - estimatedInboundDuration - estimatedOutboundDuration) / 60" />
   </action-record>
 
 </object-views>

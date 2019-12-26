@@ -11,7 +11,7 @@
     <many-to-one name="departureAirport" title="Departure" ref="com.axelor.apps.flight.db.Airport" />
     <many-to-one name="arrivalAirport" title="Arrival" ref="com.axelor.apps.flight.db.Airport" />
 
-    <one-to-many name="scheduledTime" title="Scheduled time" ref="com.axelor.apps.flight.db.ScheduledTime" mappedBy="duty" />
+    <one-to-many name="scheduledTimeList" title="Scheduled times" ref="com.axelor.apps.flight.db.ScheduledTime" mappedBy="duty" />
     <integer name="currentInboundDuration" title="Current inbound duration" default="0" />
     <integer name="currentOutboundDuration" title="Current outbound duration" default="0" />
 

@@ -16,11 +16,11 @@
       <view type="form" name="actual-duty-form" />
    </action-view>
 
-   <!-- Pay month -->
-   <menuitem name="pay-month-menu" title="Pay months" action="pay.month.all" icon="fa-money" icon-background="yellow" order="30" />
-   <action-view name="pay.month.all" title="Pay months" model="com.axelor.apps.flight.db.PayMonth">
-      <view type="grid" name="pay-month-grid" />
-      <view type="form" name="pay-month-form" />
+   <!-- Payslip -->
+   <menuitem name="payslip-menu" title="Payslip" action="payslip.all" icon="fa-money" icon-background="yellow" order="30" />
+   <action-view name="payslip.all" title="Payslips" model="com.axelor.apps.flight.db.Payslip">
+      <view type="grid" name="payslip-grid" />
+      <view type="form" name="payslip-form" />
    </action-view>
 
    <!-- Config -->
