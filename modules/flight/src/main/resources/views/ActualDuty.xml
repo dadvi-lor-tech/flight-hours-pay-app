@@ -28,8 +28,8 @@
       <field name="actualInboundDuration" widget="duration" onChange="action-actual-duty-record-set-diff" requiredIf="duty.isLeave" />
       <field name="actualOutboundDuration" widget="duration" onChange="action-actual-duty-record-set-diff" requiredIf="duty.isLeave" />
       <field name="durationDifference" readonly="true" />
-      <field name="isWoff" />
-      <field name="isOob" />
+      <field name="isWoff" colSpan="3" />
+      <field name="isOob" colSpan="3" />
     </panel>
   </form>
 

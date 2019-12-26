@@ -58,7 +58,7 @@ public class PayslipServiceImpl implements PayslipService {
     payslip.setScheduledDuration(scheduledDuration);
     payslip.setActualDuration(actualDuration);
 
-    payslip.setDifferenceHours(BigDecimal.valueOf((actualDuration - scheduledDuration) / 3600L));
+    payslip.setDifferenceHours(BigDecimal.valueOf((actualDuration - scheduledDuration) / 3600.0));
   }
 
   /**
@@ -91,7 +91,6 @@ public class PayslipServiceImpl implements PayslipService {
   }
 
   private void computeSectorNb(Payslip payslip) {
-    // TODO: test method
     int sectorNb =
         getPeriodDuties(payslip)
             .stream()

@@ -40,9 +40,10 @@
 
   <menuitem name="profile-menu" title="Profile" parent="config-menu" action="profile.me" />
   <action-view name="profile.me" title="Profile" model="com.axelor.auth.db.User">
+    <view type="grid" name="user-grid" />
     <view type="form" name="user-form-light" />
-    <!-- TODO: open current user -->
-    <context name="" expr="" />
+    <domain>self.id = :userId</domain>
+    <context name="userId" expr="eval: __user__.id" />
   </action-view>
 
 </object-views>
