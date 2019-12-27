@@ -16,22 +16,19 @@ public class ActualDutyServiceImpl implements ActualDutyService {
   public void setEstimatedDurations(ActualDuty actualDuty) throws FlightException {
     Duty duty = Beans.get(DutyRepository.class).find(actualDuty.getDuty().getId());
 
-    LocalDate dutyDate = actualDuty.getDepartureDate();
-    Optional<ScheduledTime> currentLeaveRate =
+    LocalDate date = actualDuty.getDepartureDate();
+    Optional<ScheduledTime> scheduledTime =
         duty.getScheduledTimeList()
             .stream()
-            .filter(
-                scheduledTime ->
-                    dutyDate.isAfter(scheduledTime.getStartDate())
-                        && dutyDate.isBefore(scheduledTime.getEndDate()))
+            .filter(time -> date.isAfter(time.getStartDate()) && date.isBefore(time.getEndDate()))
             .findAny();
 
-    if (currentLeaveRate.isPresent()) {
-      actualDuty.setEstimatedInboundDuration(currentLeaveRate.get().getInboundDuration());
-      actualDuty.setEstimatedOutboundDuration(currentLeaveRate.get().getOutboundDuration());
+    if (scheduledTime.isPresent()) {
+      actualDuty.setEstimatedInboundDuration(scheduledTime.get().getInboundDuration());
+      actualDuty.setEstimatedOutboundDuration(scheduledTime.get().getOutboundDuration());
 
     } else {
-      throw new FlightException("Please fill the duration(s) to apply of this duty on " + dutyDate);
+      throw new FlightException("Please fill the duration(s) to apply of this duty on " + date);
     }
   }
 }
