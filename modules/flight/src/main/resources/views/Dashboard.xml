@@ -11,7 +11,7 @@
     <view type="chart" name="cumulated.hours.year.chart" />
   </action-view>
 
-  <action-view name="dashlet.cumulated.hours.last.period" title="Cumulated hours on period">
+  <action-view name="dashlet.cumulated.hours.last.period" title="Cumulated on 28 days">
     <view type="chart" name="cumulated.hours.last.period.charts" />
   </action-view>
 

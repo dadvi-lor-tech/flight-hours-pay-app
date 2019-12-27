@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.2.xsd">
+
+  <!-- Keep these charts for performance tests -->
+
+  <chart name="cumulated.hours.year.chart.sql" title="Cumulated hours on year">
+    <dataset type="sql">
+      SELECT departure_date AS day,
+       SUM(actual_inbound_duration + actual_outbound_duration)
+         OVER (PARTITION BY to_char(departure_date, 'YYYY') ORDER BY departure_date) / 3600.0 AS hours
+      FROM flight_actual_duty
+      WHERE is_leave = 'f'
+        AND date_part('year', departure_date) = date_part('year', CURRENT_DATE)
+      </dataset>
+    <category key="day" title="Day" type="date" />
+    <series key="hours" title="Cumulated hours on year" type="line" />
+  </chart>
+
+  <chart name="cumulated.hours.last.period.charts.sql" title="Cumulated on 28 days">
+    <!-- FIXME: this query doesn't work properly -->
+    <dataset type="sql">
+      SELECT 
+        fad1.departure_date AS day,
+        t.hours
+      FROM
+          flight_actual_duty as fad1
+          INNER JOIN LATERAL (
+              SELECT 
+                  SUM(actual_inbound_duration + actual_outbound_duration) / 3600.0 as hours
+              FROM 
+                  flight_actual_duty as fad2
+              WHERE 
+                  fad2.departure_date BETWEEN (fad1.departure_date - INTERVAL '28 DAY') AND fad1.departure_date
+          ) as t ON 1=1
+      WHERE is_leave = 'f'
+      ORDER BY day
+      </dataset>
+    <category key="day" title="Day" type="date" />
+    <series key="hours" title="Cumulated hours on last period" type="line" />
+  </chart>
+
+</object-views>
