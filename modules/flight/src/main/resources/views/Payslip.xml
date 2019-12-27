@@ -21,11 +21,10 @@
 
     <panel name="computedSalaryPanel" readonly="true">
       <field name="sectorNb" />
-      <field name="threshold" />
+      <field name="threshold" widget="duration" />
       <field name="scheduledDuration" widget="duration" />
       <field name="actualDuration" widget="duration" />
       <field name="differenceHours" />
-      <!-- TODO: review computation of diff hours, use hours with decimals -->
       <spacer />
 
       <field name="overtimeHours" />

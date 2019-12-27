@@ -10,7 +10,7 @@
     <date name="endDate" title="End date" required="true" />
     <decimal name="dailyRate" title="Daily rate" required="true" />
 
-    <many-to-one name="duty" title="Duty" ref="com.axelor.apps.flight.db.Duty" />
+    <many-to-one name="userId" title="User" ref="com.axelor.auth.db.User" />
 
   </entity>
 

@@ -7,7 +7,7 @@ import com.axelor.apps.flight.db.Duty;
 import com.axelor.apps.flight.db.ScheduledTime;
 import com.axelor.apps.flight.db.repo.DutyRepository;
 
-public class DutyManagmentRepository extends DutyRepository {
+public class DutyManagementRepository extends DutyRepository {
 
   @Override
   public Duty save(Duty duty) {

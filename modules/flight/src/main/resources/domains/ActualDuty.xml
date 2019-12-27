@@ -6,8 +6,10 @@
 
   <entity name="ActualDuty" jsonAttrs="false">
 
+    <string name="name" title="Name" namecolumn="true" />
     <date name="departureDate" title="Departure date" required="true" />
-    <many-to-one name="duty" title="Duty" ref="com.axelor.apps.flight.db.Duty" required="true" />
+    <boolean name="isLeave" title="Leave ?" />
+    <many-to-one name="duty" title="Duty" ref="com.axelor.apps.flight.db.Duty" />
 
     <integer name="estimatedInboundDuration" title="Estimated inbound duration" default="0" />
     <integer name="estimatedOutboundDuration" title="Estimated outbound duration" default="0" />

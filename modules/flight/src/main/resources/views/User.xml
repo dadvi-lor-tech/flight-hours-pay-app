@@ -8,6 +8,11 @@
         <panel>
           <field name="homebase" grid-view="airport-grid" form-view="airport-form" />
           <field name="sbhList" grid-view="sbh-grid" form-view="sbh-form" colSpan="12" />
+          <field name="thresholdMinimum" />
+          <field name="overtimeUnitValue" />
+          <field name="oobUnitValue" />
+          <field name="woffUnitValue" />
+          <panel-related field="leaveRateList" grid-view="leave-rate-grid" form-view="leave-rate-form" colSpan="12" />
         </panel>
       </insert>
     </extend>
@@ -17,6 +22,11 @@
     <panel>
       <field name="homebase" grid-view="airport-grid" form-view="airport-form" />
       <field name="sbhList" grid-view="sbh-grid" form-view="sbh-form" colSpan="12" />
+      <field name="thresholdMinimum" />
+      <field name="overtimeUnitValue" />
+      <field name="oobUnitValue" />
+      <field name="woffUnitValue" />
+      <panel-related field="leaveRateList" grid-view="leave-rate-grid" form-view="leave-rate-form" colSpan="12" />
     </panel>
   </form>
 

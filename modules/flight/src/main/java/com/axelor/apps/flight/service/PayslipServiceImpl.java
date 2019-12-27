@@ -18,12 +18,6 @@ import com.google.inject.persist.Transactional;
 
 public class PayslipServiceImpl implements PayslipService {
 
-  private static final BigDecimal THRESHOLD_MINIMUM = BigDecimal.valueOf(67);
-  private static final BigDecimal OVERTIME_VALUE = BigDecimal.valueOf(0.25);
-
-  private static final BigDecimal OOB_UNIT_VALUE = BigDecimal.valueOf(75);
-  private static final BigDecimal WOFF_UNIT_VALUE = BigDecimal.valueOf(400);
-
   @Override
   @Transactional(rollbackOn = {FlightException.class, RuntimeException.class})
   public void compute(Payslip payslip) throws FlightException {
@@ -113,13 +107,15 @@ public class PayslipServiceImpl implements PayslipService {
         BigDecimal.valueOf(payslip.getSectorNb())
             .subtract(BigDecimal.valueOf(20))
             .divide(BigDecimal.valueOf(6), 4, RoundingMode.HALF_UP);
-    BigDecimal computedThreshold = BigDecimal.valueOf(75).subtract(subtrahend);
+    BigDecimal computedThreshold =
+        BigDecimal.valueOf(75).subtract(subtrahend).multiply(BigDecimal.valueOf(3600));
 
-    payslip.setThreshold(computedThreshold.max(THRESHOLD_MINIMUM));
+    payslip.setThreshold(
+        computedThreshold.max(AuthUtils.getUser().getThresholdMinimum()).intValue());
   }
 
   protected void computeOvertime(Payslip payslip) throws FlightException {
-    BigDecimal threshold = payslip.getThreshold();
+    BigDecimal threshold = BigDecimal.valueOf(payslip.getThreshold());
     BigDecimal actualHours =
         BigDecimal.valueOf(payslip.getActualDuration())
             .divide(BigDecimal.valueOf(3600), 4, RoundingMode.HALF_UP);
@@ -131,7 +127,10 @@ public class PayslipServiceImpl implements PayslipService {
     }
 
     payslip.setOvertimeValue(
-        payslip.getOvertimeHours().multiply(OVERTIME_VALUE).multiply(getCurrentSbhRate(payslip)));
+        payslip
+            .getOvertimeHours()
+            .multiply(AuthUtils.getUser().getOvertimeUnitValue())
+            .multiply(getCurrentSbhRate(payslip)));
   }
 
   protected void computeTotal(Payslip payslip) {
@@ -175,7 +174,7 @@ public class PayslipServiceImpl implements PayslipService {
   protected void countOob(Payslip payslip, List<ActualDuty> actualDuties) {
     Integer oobNb = (int) actualDuties.stream().filter(ActualDuty::getIsOob).count();
     payslip.setOobNb(oobNb);
-    payslip.setOobValue(OOB_UNIT_VALUE.multiply(BigDecimal.valueOf(oobNb)));
+    payslip.setOobValue(AuthUtils.getUser().getOobUnitValue().multiply(BigDecimal.valueOf(oobNb)));
   }
 
   protected void countAl(Payslip payslip, List<ActualDuty> actualDuties) throws FlightException {
@@ -183,7 +182,7 @@ public class PayslipServiceImpl implements PayslipService {
     BigDecimal alValue = BigDecimal.ZERO;
 
     for (ActualDuty actualDuty : actualDuties) {
-      if (Boolean.TRUE.equals(actualDuty.getDuty().getIsLeave())) {
+      if (Boolean.TRUE.equals(actualDuty.getIsLeave())) {
         alNb++;
         alValue = alValue.add(computeLeaveValue(actualDuty));
       }
@@ -196,8 +195,7 @@ public class PayslipServiceImpl implements PayslipService {
   private BigDecimal computeLeaveValue(ActualDuty actualDuty) throws FlightException {
     LocalDate leaveDate = actualDuty.getDepartureDate();
     Optional<LeaveRate> currentLeaveRate =
-        actualDuty
-            .getDuty()
+        AuthUtils.getUser()
             .getLeaveRateList()
             .stream()
             .filter(
@@ -206,13 +204,16 @@ public class PayslipServiceImpl implements PayslipService {
             .findAny();
 
     return currentLeaveRate
-        .orElseThrow(() -> new FlightException("Please fill a leave rate to apply on " + leaveDate))
+        .orElseThrow(
+            () ->
+                new FlightException("Please fill a leave rate in profile to apply on " + leaveDate))
         .getDailyRate();
   }
 
   protected void countWoff(Payslip payslip, List<ActualDuty> actualDuties) {
     Integer woffNb = (int) actualDuties.stream().filter(ActualDuty::getIsWoff).count();
     payslip.setWoffNb(woffNb);
-    payslip.setWoffValue(WOFF_UNIT_VALUE.multiply(BigDecimal.valueOf(woffNb)));
+    payslip.setWoffValue(
+        AuthUtils.getUser().getWoffUnitValue().multiply(BigDecimal.valueOf(woffNb)));
   }
 }

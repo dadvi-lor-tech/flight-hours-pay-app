@@ -12,11 +12,7 @@
 
   <form name="duty-form" title="Duty" model="com.axelor.apps.flight.db.Duty">
     <panel>
-      <field name="name" />
-      <field name="isLeave" onChange="action-duty-record-reset-fields" />
-    </panel>
-    <panel-related field="leaveRateList" grid-view="leave-rate-grid" form-view="leave-rate-form" showIf="isLeave" />
-    <panel hideIf="isLeave">
+      <field name="name" colSpan="12" />
       <field name="departureAirport" />
       <field name="arrivalAirport" />
       <field name="currentInboundDuration" widget="duration" readonly="true" />
@@ -24,16 +20,5 @@
       <field name="scheduledTimeList" colSpan="12" grid-view="scheduled-time-grid" form-view="scheduled-time-form" />
     </panel>
   </form>
-
-  <action-record name="action-duty-record-reset-fields" model="com.axelor.apps.flight.db.Duty">
-    <field name="startDate" expr="eval: null" if="!isLeave" />
-    <field name="endDate" expr="eval: null" if="!isLeave" />
-    <field name="dailyRate" expr="eval: null" if="!isLeave" />
-    <field name="departureAirport" expr="eval: null" if="isLeave" />
-    <field name="arrivalAirport" expr="eval: null" if="isLeave" />
-    <field name="currentInboundDuration" expr="eval: null" if="isLeave" />
-    <field name="currentOutboundDuration" expr="eval: null" if="isLeave" />
-    <field name="scheduledTimeList" expr="eval: null" if="isLeave" />
-  </action-record>
 
 </object-views>

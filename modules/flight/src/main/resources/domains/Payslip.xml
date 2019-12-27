@@ -14,7 +14,7 @@
     <decimal name="totalSalary" title="Total salary" />
 
     <integer name="sectorNb" title="Number of sectors" />
-    <decimal name="threshold" title="Threshold" />
+    <integer name="threshold" title="Threshold" />
 
     <integer name="scheduledDuration" title="Scheduled duration" />
     <integer name="actualDuration" title="Actual duration" />
