@@ -8,7 +8,7 @@
 
     <string name="name" title="Name" namecolumn="true" />
     <date name="departureDate" title="Departure date" required="true" />
-    <boolean name="isLeave" title="Leave ?" />
+    <boolean name="isLeave" title="Leave ?" default="false"/>
     <many-to-one name="duty" title="Duty" ref="com.axelor.apps.flight.db.Duty" />
 
     <integer name="estimatedInboundDuration" title="Estimated inbound duration" default="0" />
