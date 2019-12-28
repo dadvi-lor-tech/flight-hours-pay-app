@@ -64,7 +64,7 @@ public class PayslipServiceImpl implements PayslipService {
   protected void computeFlightPay(Payslip payslip) throws FlightException {
     payslip.setFlightSalary(
         getCurrentSbhRate(payslip)
-            .multiply(BigDecimal.valueOf(payslip.getScheduledDuration() / 3600)));
+            .multiply(BigDecimal.valueOf(payslip.getScheduledDuration() / 3600.0)));
   }
 
   private BigDecimal getCurrentSbhRate(Payslip payslip) throws FlightException {
