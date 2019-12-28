@@ -80,7 +80,7 @@ public class PayslipServiceImpl implements PayslipService {
             .findAny();
 
     return sbhOpt
-        .orElseThrow(() -> new FlightException("Please fill your current SBH."))
+        .orElseThrow(() -> new FlightException("Please fill the SBH to apply on " + payDate))
         .getHourlyRate();
   }
 
