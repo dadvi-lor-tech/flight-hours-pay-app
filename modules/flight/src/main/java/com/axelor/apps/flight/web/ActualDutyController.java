@@ -1,5 +1,7 @@
 package com.axelor.apps.flight.web;
 
+import java.time.LocalDate;
+
 import com.axelor.apps.flight.db.ActualDuty;
 import com.axelor.apps.flight.exception.FlightException;
 import com.axelor.apps.flight.service.ActualDutyService;
@@ -8,6 +10,11 @@ import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 
 public class ActualDutyController {
+
+  public void createActualDuty(ActionRequest request, ActionResponse response) {
+    Object dateObj = request.getContext().get("departureDate");
+    response.setValue("departureDate", dateObj != null ? (LocalDate) dateObj : null);
+  }
 
   public void setEstimatedDurations(ActionRequest request, ActionResponse response) {
     try {

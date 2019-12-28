@@ -16,7 +16,7 @@
     <field name="isOob" />
   </grid>
 
-  <form name="actual-duty-form" title="Actual duty" model="com.axelor.apps.flight.db.ActualDuty">
+  <form name="actual-duty-form" title="Actual duty" model="com.axelor.apps.flight.db.ActualDuty" onNew="com.axelor.apps.flight.web.ActualDutyController:createActualDuty">
     <panel>
       <field name="departureDate" onChange="action-actual-duty-group-change-duty" />
       <field name="isLeave" onChange="action-actual-duty-record-clear" />
