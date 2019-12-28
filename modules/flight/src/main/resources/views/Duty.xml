@@ -6,8 +6,8 @@
     <field name="name" />
     <field name="departureAirport" />
     <field name="arrivalAirport" />
-    <field name="currentInboundDuration" widget="duration" />
-    <field name="currentOutboundDuration" widget="duration" />
+    <field name="estimatedInboundDuration" widget="duration" />
+    <field name="estimatedOutboundDuration" widget="duration" />
   </grid>
 
   <form name="duty-form" title="Duty" model="com.axelor.apps.flight.db.Duty">
@@ -15,8 +15,8 @@
       <field name="name" colSpan="12" />
       <field name="departureAirport" />
       <field name="arrivalAirport" />
-      <field name="currentInboundDuration" widget="duration" readonly="true" />
-      <field name="currentOutboundDuration" widget="duration" readonly="true" />
+      <field name="estimatedInboundDuration" widget="duration" readonly="true" />
+      <field name="estimatedOutboundDuration" widget="duration" readonly="true" />
       <field name="scheduledTimeList" colSpan="12" grid-view="scheduled-time-grid" form-view="scheduled-time-form" />
     </panel>
   </form>

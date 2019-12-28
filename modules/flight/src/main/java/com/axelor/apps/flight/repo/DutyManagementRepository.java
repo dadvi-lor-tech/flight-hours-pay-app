@@ -20,8 +20,8 @@ public class DutyManagementRepository extends DutyRepository {
 
     if (scheduledTimeOpt.isPresent()) {
       ScheduledTime scheduledTime = scheduledTimeOpt.get();
-      duty.setCurrentInboundDuration(scheduledTime.getInboundDuration());
-      duty.setCurrentOutboundDuration(scheduledTime.getOutboundDuration());
+      duty.setEstimatedInboundDuration(scheduledTime.getInboundDuration());
+      duty.setEstimatedOutboundDuration(scheduledTime.getOutboundDuration());
     }
 
     return super.save(duty);

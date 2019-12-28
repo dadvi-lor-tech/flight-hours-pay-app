@@ -33,7 +33,6 @@ public class ChartService {
   }
 
   private BigDecimal getCumulatedHoursOnYear(LocalDate date) {
-    BigDecimal cumulated = BigDecimal.ZERO;
     List<ActualDuty> duties =
         actualDutyRepo
             .all()
@@ -42,12 +41,7 @@ public class ChartService {
             .bind("date", date)
             .fetch();
 
-    for (ActualDuty actualDuty : duties) {
-      cumulated = cumulated.add(BigDecimal.valueOf(actualDuty.getActualInboundDuration()));
-      cumulated = cumulated.add(BigDecimal.valueOf(actualDuty.getActualOutboundDuration()));
-    }
-
-    return cumulated.divide(BigDecimal.valueOf(3600), 2, RoundingMode.HALF_UP);
+    return getCumulatedHours(duties);
   }
 
   public List<Map<String, Object>> getCumulatedOnPeriod(LocalDate inputDate) {
@@ -67,7 +61,6 @@ public class ChartService {
   }
 
   private BigDecimal getCumulatedHoursOnPeriod(LocalDate date) {
-    BigDecimal cumulated = BigDecimal.ZERO;
     List<ActualDuty> duties =
         actualDutyRepo
             .all()
@@ -76,9 +69,24 @@ public class ChartService {
             .bind("date", date)
             .fetch();
 
+    return getCumulatedHours(duties);
+  }
+
+  private BigDecimal getCumulatedHours(List<ActualDuty> duties) {
+    BigDecimal cumulated = BigDecimal.ZERO;
+
     for (ActualDuty actualDuty : duties) {
-      cumulated = cumulated.add(BigDecimal.valueOf(actualDuty.getActualInboundDuration()));
-      cumulated = cumulated.add(BigDecimal.valueOf(actualDuty.getActualOutboundDuration()));
+      Integer inboundDuration =
+          actualDuty.getActualInboundDuration().compareTo(0) != 0
+              ? actualDuty.getActualInboundDuration()
+              : actualDuty.getEstimatedInboundDuration();
+      cumulated = cumulated.add(BigDecimal.valueOf(inboundDuration));
+
+      Integer outboundDuration =
+          actualDuty.getActualOutboundDuration().compareTo(0) != 0
+              ? actualDuty.getActualOutboundDuration()
+              : actualDuty.getEstimatedOutboundDuration();
+      cumulated = cumulated.add(BigDecimal.valueOf(outboundDuration));
     }
 
     return cumulated.divide(BigDecimal.valueOf(3600), 2, RoundingMode.HALF_UP);
