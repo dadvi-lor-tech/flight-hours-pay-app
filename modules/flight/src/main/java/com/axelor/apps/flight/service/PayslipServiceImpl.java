@@ -80,11 +80,11 @@ public class PayslipServiceImpl implements PayslipService {
    */
   protected void computeFlightPay(Payslip payslip) throws FlightException {
     LocalDate fromDate = LocalDate.of(payslip.getYear(), payslip.getMonth(), 1);
-    LocalDate payDate = fromDate.withDayOfMonth(fromDate.lengthOfMonth());
+    LocalDate toDate = fromDate.plusMonths(1);
 
     BigDecimal flightSalary = BigDecimal.ZERO;
 
-    for (LocalDate date = fromDate; date.isBefore(payDate); date = date.plusDays(1)) {
+    for (LocalDate date = fromDate; date.isBefore(toDate); date = date.plusDays(1)) {
       BigDecimal scheduledDuration = BigDecimal.ZERO;
       for (ActualDuty actualDuty : getPeriodDuties(date)) {
         scheduledDuration =
@@ -93,7 +93,11 @@ public class PayslipServiceImpl implements PayslipService {
                 .add(BigDecimal.valueOf(actualDuty.getEstimatedOutboundDuration()));
       }
 
-      flightSalary = flightSalary.add(getSbhRate(date).multiply(scheduledDuration));
+      flightSalary =
+          flightSalary.add(
+              getSbhRate(date)
+                  .multiply(scheduledDuration)
+                  .divide(BigDecimal.valueOf(3600), 4, RoundingMode.HALF_UP));
     }
 
     payslip.setFlightSalary(flightSalary);
