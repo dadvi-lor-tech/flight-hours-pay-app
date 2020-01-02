@@ -56,31 +56,42 @@ public class PayslipServiceImpl implements PayslipService {
   }
 
   /**
-   * Computes the flight pay according to the hourly rate at the last day of the payslip
+   * Computes the flight pay according to the hourly rate of each day of the payslip
    *
    * @param payslip
    * @throws FlightException
    */
   protected void computeFlightPay(Payslip payslip) throws FlightException {
-    payslip.setFlightSalary(
-        getCurrentSbhRate(payslip)
-            .multiply(BigDecimal.valueOf(payslip.getScheduledDuration() / 3600.0)));
-  }
-
-  private BigDecimal getCurrentSbhRate(Payslip payslip) throws FlightException {
     LocalDate fromDate = LocalDate.of(payslip.getYear(), payslip.getMonth(), 1);
     LocalDate payDate = fromDate.withDayOfMonth(fromDate.lengthOfMonth());
 
+    BigDecimal flightSalary = BigDecimal.ZERO;
+
+    for (LocalDate date = fromDate; date.isBefore(payDate); date = date.plusDays(1)) {
+      BigDecimal scheduledDuration = BigDecimal.ZERO;
+      for (ActualDuty actualDuty : getPeriodDuties(date)) {
+        scheduledDuration =
+            scheduledDuration
+                .add(BigDecimal.valueOf(actualDuty.getEstimatedInboundDuration()))
+                .add(BigDecimal.valueOf(actualDuty.getEstimatedOutboundDuration()));
+      }
+
+      flightSalary = flightSalary.add(getSbhRate(date).multiply(scheduledDuration));
+    }
+
+    payslip.setFlightSalary(flightSalary);
+  }
+
+  private BigDecimal getSbhRate(LocalDate date) throws FlightException {
     Optional<Sbh> sbhOpt =
         AuthUtils.getUser()
             .getSbhList()
             .stream()
-            .filter(
-                sbh -> payDate.isAfter(sbh.getStartDate()) && !payDate.isAfter(sbh.getEndDate()))
+            .filter(sbh -> !date.isBefore(sbh.getStartDate()) && !date.isAfter(sbh.getEndDate()))
             .findAny();
 
     return sbhOpt
-        .orElseThrow(() -> new FlightException("Please fill the SBH to apply on " + payDate))
+        .orElseThrow(() -> new FlightException("Please fill the SBH to apply on " + date))
         .getHourlyRate();
   }
 
@@ -129,7 +140,7 @@ public class PayslipServiceImpl implements PayslipService {
             .getOvertimeDuration()
             .divide(BigDecimal.valueOf(3600), 4, RoundingMode.HALF_UP)
             .multiply(AuthUtils.getUser().getOvertimeUnitValue())
-            .multiply(getCurrentSbhRate(payslip)));
+            .multiply(getSbhRate(LocalDate.of(payslip.getYear(), payslip.getMonth(), 1))));
   }
 
   protected void computeTotal(Payslip payslip) {
@@ -167,6 +178,14 @@ public class PayslipServiceImpl implements PayslipService {
         .filter("self.departureDate BETWEEN :fromDate AND :toDate")
         .bind("fromDate", fromDate)
         .bind("toDate", toDate)
+        .fetch();
+  }
+
+  private List<ActualDuty> getPeriodDuties(LocalDate date) {
+    return Beans.get(ActualDutyRepository.class)
+        .all()
+        .filter("self.departureDate = :date")
+        .bind("date", date)
         .fetch();
   }
 
