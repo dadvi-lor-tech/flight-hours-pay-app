@@ -21,7 +21,7 @@
     <decimal name="differenceHours" title="Difference hours" />
 
     <decimal name="overtimeDuration" title="Overtime hours" />
-    <decimal name="overtimeValue" title="Overtime value (€)" />
+    <decimal name="overtimeValue" title="Overtime value" />
 
     <integer name="woffNb" title="Number of WOFF" />
     <decimal name="woffValue" title="WOFF value" />

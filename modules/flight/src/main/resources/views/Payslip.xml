@@ -28,16 +28,16 @@
       <spacer />
 
       <field name="overtimeDuration" widget="duration" />
-      <field name="overtimeValue" />
+      <field name="overtimeValue" title="Overtime value (€)" />
     </panel>
 
     <panel name="extraPanel" readonly="true">
       <field name="woffNb" />
-      <field name="woffValue" />
+      <field name="woffValue" title="WOFF value (€)" />
       <field name="oobNb" />
-      <field name="oobValue" />
+      <field name="oobValue" title="OOB value (€)" />
       <field name="alNb" />
-      <field name="alValue" />
+      <field name="alValue" title="AL value (€)" />
     </panel>
 
     <panel name="sidePanel" sidebar="true">
