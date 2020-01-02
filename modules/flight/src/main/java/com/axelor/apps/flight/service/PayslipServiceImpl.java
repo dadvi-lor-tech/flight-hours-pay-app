@@ -116,19 +116,18 @@ public class PayslipServiceImpl implements PayslipService {
 
   protected void computeOvertime(Payslip payslip) throws FlightException {
     BigDecimal threshold = BigDecimal.valueOf(payslip.getThreshold());
-    BigDecimal actualHours =
-        BigDecimal.valueOf(payslip.getActualDuration())
-            .divide(BigDecimal.valueOf(3600), 4, RoundingMode.HALF_UP);
+    BigDecimal actualDuration = BigDecimal.valueOf(payslip.getActualDuration());
 
-    if (actualHours.compareTo(threshold) > 0) {
-      payslip.setOvertimeHours(actualHours.subtract(threshold));
+    if (actualDuration.compareTo(threshold) > 0) {
+      payslip.setOvertimeDuration(actualDuration.subtract(threshold));
     } else {
-      payslip.setOvertimeHours(BigDecimal.ZERO);
+      payslip.setOvertimeDuration(BigDecimal.ZERO);
     }
 
     payslip.setOvertimeValue(
         payslip
-            .getOvertimeHours()
+            .getOvertimeDuration()
+            .divide(BigDecimal.valueOf(3600), 4, RoundingMode.HALF_UP)
             .multiply(AuthUtils.getUser().getOvertimeUnitValue())
             .multiply(getCurrentSbhRate(payslip)));
   }

@@ -27,7 +27,7 @@
       <field name="differenceHours" />
       <spacer />
 
-      <field name="overtimeHours" />
+      <field name="overtimeDuration" widget="duration" />
       <field name="overtimeValue" />
     </panel>
 
