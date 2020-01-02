@@ -20,7 +20,7 @@
     <integer name="actualDuration" title="Actual duration" />
     <decimal name="differenceHours" title="Difference hours" />
 
-    <decimal name="overtimeDuration" title="Overtime hours" />
+    <integer name="overtimeDuration" title="Overtime duration" />
     <decimal name="overtimeValue" title="Overtime value" />
 
     <integer name="woffNb" title="Number of WOFF" />

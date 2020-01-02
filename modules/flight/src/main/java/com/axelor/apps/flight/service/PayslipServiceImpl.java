@@ -130,14 +130,13 @@ public class PayslipServiceImpl implements PayslipService {
     BigDecimal actualDuration = BigDecimal.valueOf(payslip.getActualDuration());
 
     if (actualDuration.compareTo(threshold) > 0) {
-      payslip.setOvertimeDuration(actualDuration.subtract(threshold));
+      payslip.setOvertimeDuration(actualDuration.subtract(threshold).intValue());
     } else {
-      payslip.setOvertimeDuration(BigDecimal.ZERO);
+      payslip.setOvertimeDuration(0);
     }
 
     payslip.setOvertimeValue(
-        payslip
-            .getOvertimeDuration()
+        BigDecimal.valueOf(payslip.getOvertimeDuration())
             .divide(BigDecimal.valueOf(3600), 4, RoundingMode.HALF_UP)
             .multiply(AuthUtils.getUser().getOvertimeUnitValue())
             .multiply(getSbhRate(LocalDate.of(payslip.getYear(), payslip.getMonth(), 1))));
