@@ -65,7 +65,7 @@ public class ChartService {
         actualDutyRepo
             .all()
             .filter("self.departureDate BETWEEN :startOfPeriod AND :date")
-            .bind("startOfPeriod", date.minusDays(28))
+            .bind("startOfPeriod", date.minusDays(27))
             .bind("date", date)
             .fetch();
 
