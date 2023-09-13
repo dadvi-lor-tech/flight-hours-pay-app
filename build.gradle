@@ -1,20 +1,6 @@
-buildscript {
-  ext.repos = {
-    mavenCentral()
-    maven { url 'https://plugins.gradle.org/m2/' }
-    maven { url 'https://repository.axelor.com/nexus/public/' } 
-  }
-  repositories repos
-  dependencies {
-    classpath 'com.axelor:axelor-gradle:5.2.0' 
-  }
+plugins {
+  id 'com.axelor.app'
 }
-
-allprojects {
-  repositories repos
-}
-
-apply plugin: 'com.axelor.app' 
 
 axelor { 
   title = 'Flight hours & pay app'
@@ -27,8 +13,11 @@ allprojects {
   group = 'com.axelor'
   version = '1.1.0'
 
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
+  java {
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(11)
+    }
+  }
 }
 
 dependencies {
