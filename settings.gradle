@@ -2,4 +2,3 @@ rootProject.name = 'flight-hours-pay-app'
 
 // Include modules
 include "modules:flight"
-
