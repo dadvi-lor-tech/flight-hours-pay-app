@@ -32,6 +32,5 @@ allprojects {
 }
 
 dependencies {
-  // add dependencies
-  compile project(':modules:flight')
+  implementation project(':modules:flight')
 }
